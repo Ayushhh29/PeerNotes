@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PeerNotes Login</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+
+    <div class="card shadow p-4" style="width:400px;">
+
+        <h2 class="text-center mb-4">
+            📚 PeerNotes
+        </h2>
+
+        <input
+            type="email"
+            id="email"
+            class="form-control mb-3"
+            placeholder="Email"
+        >
+
+        <input
+            type="password"
+            id="password"
+            class="form-control mb-3"
+            placeholder="Password"
+        >
+
+        <button
+            class="btn btn-primary w-100"
+            onclick="loginUser()"
+        >
+            Login
+        </button>
+
+        <div class="text-center mt-3">
+
+            Don't have an account?
+
+            <a href="/register-page">
+                Register
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function loginUser(){
+
+    let email =
+        document.getElementById("email").value;
+
+    let password =
+        document.getElementById("password").value;
+
+    fetch("/login",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            email,
+            password
+        })
+
+    })
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        if(data.error){
+            alert(data.error);
+            return;
+        }
+
+        window.location.href="/dashboard";
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerNotes AI</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+
+        body{
+            background:#f4f7fb;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .navbar-custom{
+            background:#111827;
+            padding:18px;
+        }
+
+        .navbar-custom h2{
+            color:white;
+            font-weight:700;
+            margin:0;
+        }
+
+        .main-card{
+            border:none;
+            border-radius:20px;
+            box-shadow:0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .upload-box{
+            border:2px dashed #cbd5e1;
+            border-radius:16px;
+            padding:40px;
+            text-align:center;
+            background:white;
+            transition:0.3s;
+        }
+
+        .upload-box:hover{
+            border-color:#2563eb;
+            background:#f8fbff;
+        }
+
+        .note-card{
+            border:none;
+            border-radius:18px;
+            box-shadow:0 3px 15px rgba(0,0,0,0.06);
+            transition:0.2s;
+        }
+
+        .note-card:hover{
+            transform:translateY(-3px);
+        }
+
+        .output-box{
+            min-height:300px;
+            max-height:500px;
+            overflow:auto;
+            background:white;
+            border-radius:16px;
+            border:1px solid #e5e7eb;
+            padding:20px;
+        }
+
+        .section-title{
+            font-weight:700;
+            color:#111827;
+        }
+
+        .btn-custom{
+            border-radius:12px;
+            font-weight:600;
+        }
+
+        .sidebar{
+    background:#111827;
+    min-height:100vh;
+    color:white;
+    padding:20px;
+}
+
+.sidebar .btn{
+    color:white;
+    border:none;
+}
+
+.sidebar .btn:hover{
+    background:#2563eb;
+    color:white;
+}
+
+    </style>
+
+</head>
+<body>
+
+
+
+    <!-- TOP NAVBAR -->
+
+    <nav class="navbar navbar-dark navbar-custom px-4">
+
+        <h3 class="text-white m-0">
+            📚 PeerNotes
+        </h3>
+
+        <div class="d-flex align-items-center">
+
+            <span
+                id="welcomeUser"
+                class="text-white me-3"
+            >
+                Welcome
+            </span>
+
+            <button
+                class="btn btn-outline-light"
+                onclick="logoutUser()"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </nav>
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <!-- SIDEBAR -->
+
+            <div class="col-md-2 sidebar">
+
+                <h4 class="mb-4">📚 PeerNotes</h4>
+
+                <button class="btn w-100 text-start mb-2"
+                        onclick="showSection('dashboard')">
+                    🏠 Dashboard
+                </button>
+
+                <button class="btn w-100 text-start mb-2"
+                        onclick="showSection('notes')">
+                    📄 My Notes
+                </button>
+
+                <button class="btn w-100 text-start mb-2"
+                        onclick="showSection('summaries')">
+                    📝 Summaries
+                </button>
+
+                <button class="btn w-100 text-start mb-2"
+                        onclick="showSection('quizzes')">
+                    ❓ Quizzes
+                </button>
+
+                <button class="btn w-100 text-start mb-2"
+                        onclick="showSection('flashcards')">
+                    🎴 Flashcards
+                </button>
+
+                <button
+    class="btn w-100 text-start mb-2"
+    onclick="showSection('bookmarks')">
+    ⭐ Bookmarks
+</button>
+
+                <button
+    class="btn w-100 text-start mb-2"
+    onclick="showSection('chat')">
+    💬 Chat With Notes
+</button>
+<button
+class="btn w-100 text-start mb-2"
+onclick="showSection('history')">
+
+📊 Study History
+
+</button>
+                <button class="btn w-100 text-start mb-2"
+                        onclick="showSection('profile')">
+                    👤 Profile
+                </button>
+
+            </div>
+
+            <!-- MAIN CONTENT -->
+
+            <div class="col-md-10 p-4">
+
+                <!-- DASHBOARD -->
+
+                <div id="dashboardSection">
+
+                    <!-- Upload -->
+
+                    <div class="card main-card p-4 mb-4">
+
+                        <h3 class="section-title mb-4">
+                            Upload Study Notes
+                        </h3>
+
+                        <div class="upload-box">
+
+                            <label
+                                for="pdfInput"
+                                class="btn btn-outline-primary"
+                            >
+                                Choose PDF
+                            </label>
+
+                            <input
+                                type="file"
+                                id="pdfInput"
+                                hidden
+                                accept=".pdf"
+                            >
+
+                            <p
+                                id="selectedFile"
+                                class="mt-2 text-muted"
+                            >
+                                No file selected
+                            </p>
+
+                            <select
+                                id="subject"
+                                class="form-control mt-3"
+                            >
+                                <option value="DSA">DSA</option>
+                                <option value="OOP">OOP</option>
+                                <option value="DBMS">DBMS</option>
+                                <option value="CN">Computer Networks</option>
+                                <option value="OS">Operating System</option>
+                                <option value="AIML">AIML</option>
+                                <option value="Others">Others</option>
+                            </select>
+
+                            <button
+                                class="btn btn-dark btn-custom mt-4 px-4"
+                                onclick="uploadNote()"
+                            >
+                                Upload Note
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- AI Output -->
+
+                    <div class="card main-card p-4">
+
+                        <h3 class="section-title mb-4">
+                            🤖 AI Output
+                        </h3>
+
+                        <div
+                            id="output"
+                            class="output-box"
+                        >
+                            AI results will appear here...
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- MY NOTES -->
+
+                <div
+                    id="notesSection"
+                    style="display:none;"
+                >
+
+                    <h2 class="mb-4">
+                        📄 My Notes 
+                    </h2>
+
+                    <div class="input-group mb-3">
+
+                        
+
+                        <input
+                            type="text"
+                            id="searchInput"
+                            onkeyup="searchNotes()"
+                            class="form-control"
+                            placeholder="Search notes..."
+                        >
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="searchNotes()"
+                        >
+                            Search
+                        </button>
+
+                    </div>
+
+                    <div class="d-flex gap-2 mb-3 flex-wrap">
+
+                        <button
+                            class="btn btn-outline-dark"
+                            onclick="filterNotes('All')"
+                        >
+                            All
+                        </button>
+
+                        <button
+                            class="btn btn-outline-primary"
+                            onclick="filterNotes('DSA')"
+                        >
+                            DSA
+                        </button>
+
+                        <button
+                            class="btn btn-outline-primary"
+                            onclick="filterNotes('OOP')"
+                        >
+                            OOP
+                        </button>
+
+                        <button
+                            class="btn btn-outline-primary"
+                            onclick="filterNotes('DBMS')"
+                        >
+                            DBMS
+                        </button>
+
+                        <button
+                            class="btn btn-outline-primary"
+                            onclick="filterNotes('CN')"
+                        >
+                            CN
+                        </button>
+
+                        <button
+                            class="btn btn-outline-primary"
+                            onclick="filterNotes('OS')"
+                        >
+                            OS
+                        </button>
+
+                        <button
+                            class="btn btn-outline-primary"
+                            onclick="filterNotes('AIML')"
+                        >
+                            AIML
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="notesList"
+                        class="row g-3"
+                    >
+                    </div>
+
+                </div>
+
+                <!-- SUMMARIES -->
+
+                <div id="summariesSection" style="display:none;">
+
+    <h2 class="mb-4">
+        📝 Saved Summaries
+    </h2>
+
+    <div id="summariesList">
+    </div>
+
+</div>
+
+                <!-- QUIZZES -->
+
+                <div id="quizzesSection" style="display:none;">
+
+    <h2 class="mb-4">
+        ❓ Saved Quizzes
+    </h2>
+
+    <div id="quizzesList"></div>
+
+</div>
+
+                <!-- FLASHCARDS -->
+
+                <div
+    id="flashcardsSection"
+    style="display:none;"
+>
+
+    <h2 class="mb-4">
+        🎴 Saved Flashcards
+    </h2>
+
+    <div id="flashcardsList">
+
+    </div>
+
+</div>
+
+<div id="bookmarksSection" style="display:none;">
+
+    <h2 class="mb-4">
+        ⭐ Bookmarked Notes
+    </h2>
+
+    <div id="bookmarksList"></div>
+
+</div>
+
+<!-- CHAT WITH NOTES -->
+
+<div
+    id="chatSection"
+    style="display:none;"
+>
+
+    <h2 class="mb-4">
+        💬 Chat With Notes
+    </h2>
+
+    <div class="card p-4 shadow">
+
+        <label class="mb-2">
+            Select Note
+        </label>
+
+        <select
+            id="chatNoteSelect"
+            class="form-control mb-3"
+        >
+        </select>
+
+        <label class="mb-2">
+            Ask Question
+        </label>
+
+        <textarea
+            id="chatQuestion"
+            class="form-control mb-3"
+            rows="4"
+            placeholder="Ask anything from your PDF..."
+        >
+        </textarea>
+
+        <button
+            class="btn btn-primary"
+            onclick="askQuestion()"
+        >
+            Ask AI
+        </button>
+
+       <div id="chatConversation"
+     class="border rounded p-3 mb-3"
+     style="height:400px; overflow-y:auto;">
+</div>
+
+    </div>
+
+</div>
+
+<div
+id="historySection"
+style="display:none;"
+>
+
+<h2>
+📊 Study History
+</h2>
+
+<div id="historyList">
+</div>
+
+</div>
+
+                <!-- PROFILE -->
+
+                <div id="profileSection"
+                     style="display:none;">
+
+                    <h2 class="mb-4">
+                        👤 Profile
+                    </h2>
+
+                    <div
+                        id="profileData"
+                        class="card p-4 shadow"
+                    >
+                        Loading...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+<script>
+
+    let currentSummary = "";
+    let currentQuiz = "";
+    let currentFlashcards = "";
+    let currentNoteId = null;
+
+function showSection(section){
+
+    document.getElementById("dashboardSection").style.display = "none";
+    document.getElementById("notesSection").style.display = "none";
+    document.getElementById("summariesSection").style.display = "none";
+    document.getElementById("quizzesSection").style.display = "none";
+    document.getElementById("flashcardsSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
+    document.getElementById("bookmarksSection").style.display = "none";
+    document.getElementById("historySection").style.display = "none";
+
+    document.getElementById(
+        section + "Section"
+    ).style.display = "block";
+
+    if(section === "profile"){
+        loadProfile();
+    }
+
+    if(section === "notes"){
+        loadNotes();
+    }
+
+    if(section === "summaries"){
+        loadSummaries();
+    }
+
+    if(section === "quizzes"){
+        loadQuizzes();
+    }
+
+    if(section === "flashcards"){
+        loadFlashcards();
+    }
+
+    if(section === "chat"){
+        loadChatNotes();
+    }
+
+    if(section === "bookmarks"){
+        loadBookmarks();
+    }
+
+    if(section === "history"){
+        loadHistory();
+    }
+}
+
+function logoutUser(){
+
+    fetch("/logout")
+
+    .then(() => {
+
+        window.location.href = "/";
+
+    });
+
+}
+
+function loadUser(){
+
+    fetch("/me")
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        if(data.error){
+            return;
+        }
+
+        document.getElementById(
+            "welcomeUser"
+        ).innerText =
+            "Welcome, " + data.name;
+
+    });
+
+}
+
+function uploadNote() {
+
+    let fileInput = document.getElementById("pdfInput");
+    let file = fileInput.files[0];
+
+    if(!file){
+        alert("Please select a PDF file");
+        return;
+    }
+
+    let subject =
+    document.getElementById("subject").value;
+
+    let formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("subject", subject);
+
+  
+
+    fetch("/upload-note", {
+
+        method:"POST",
+        body:formData
+
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        if(data.error){
+    alert(data.error);
+    return;
+}
+
+alert(data.message);
+
+        loadNotes();
+
+    });
+
+}
+
+function loadNotes() {
+
+    fetch("/my-notes")
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        renderNotes(data.notes);
+
+
+    });
+
+}
+
+function summarizeNote(filename, noteId, button){
+
+     button.disabled = true;
+    button.innerHTML = "Generating...";
+
+
+    fetch(`/summarize-note/${filename}`)
+    .then(res => res.json())
+    .then(data => {
+
+        currentSummary = data.summary;
+        currentNoteId = noteId;
+
+        document.getElementById("output").innerHTML = `
+            <pre>${data.summary}</pre>
+
+
+            <button
+                class="btn btn-success mt-3"
+                onclick="saveSummary()"
+            >
+                Save Summary
+            </button>
+        `;
+
+                    showToast(
+    "Success",
+    "Summary generated successfully!");
+  })
+    .catch(() => {
+        showToast("Error", "Failed to generate summary.");
+    })
+    .finally(() => {
+        button.disabled = false;
+        button.innerHTML = "Summary";
+    
+});
+}
+function generateQuiz(filename, noteId, button){
+
+    button.disabled = true;
+
+    button.innerHTML = `
+        <span class="spinner-border spinner-border-sm"></span>
+        Generating...
+    `;
+
+    document.getElementById("output").innerHTML =
+        "Generating quiz...";
+
+    fetch(`/generate-quiz/${filename}`)
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        currentQuiz = data.quiz;
+        currentNoteId = noteId;
+
+        document.getElementById("output").innerHTML = `
+            <pre>${data.quiz}</pre>
+
+            <button
+                class="btn btn-success mt-3"
+                onclick="saveQuiz()"
+            >
+                Save Quiz
+            </button>
+        `;
+
+        showToast(
+            "Success",
+            "Quiz generated successfully!"
+        );
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        showToast(
+            "Error",
+            "Failed to generate quiz."
+        );
+
+    })
+
+    .finally(() => {
+
+        button.disabled = false;
+        button.innerHTML = "Quiz";
+
+    });
+
+}
+function generateFlashcards(filename, noteId, button){
+
+    button.disabled = true;
+
+    button.innerHTML = `
+        <span class="spinner-border spinner-border-sm"></span>
+        Generating...
+    `;
+
+    document.getElementById("output").innerHTML =
+        "Generating flashcards...";
+
+    fetch(`/generate-flashcards/${filename}`)
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        currentFlashcards = data.flashcards;
+        currentNoteId = noteId;
+
+        document.getElementById("output").innerHTML = `
+            <pre>${data.flashcards}</pre>
+
+            <button
+                class="btn btn-success mt-3"
+                onclick="saveFlashcards()"
+            >
+                Save Flashcards
+            </button>
+        `;
+
+        showToast(
+            "Success",
+            "Flashcards generated successfully!"
+        );
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        showToast(
+            "Error",
+            "Failed to generate flashcards."
+        );
+
+    })
+
+    .finally(() => {
+
+        button.disabled = false;
+
+        button.innerHTML = "Flashcards";
+
+    });
+
+}
+
+function copyOutput(){
+
+    let text = document.getElementById("output").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Copied!");
+
+}
+
+function deleteNote(id) {
+
+    fetch(`/delete-note/${id}`, {
+        method: "DELETE"
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        alert(data.message);
+
+        loadNotes();
+    });
+}
+
+
+function searchNotes() {
+
+    let keyword =
+        document.getElementById("searchInput").value;
+
+    fetch(`/search-notes/${keyword}`)
+    .then(res => res.json())
+    .then(data => {
+
+       renderNotes(data.notes);
+
+    });
+
+}
+
+function filterNotes(subject) {
+
+    fetch(`/filter-notes/${subject}`)
+    .then(res => res.json())
+    .then(data => {
+
+        renderNotes(data.notes);
+
+    });
+
+}
+
+function renderNotes(notes) {
+
+    let notesList =
+        document.getElementById("notesList");
+
+    notesList.innerHTML = "";
+
+    notes.forEach(note => {
+
+        let card =
+            document.createElement("div");
+
+        card.className =
+            "col-md-6";
+
+        card.innerHTML = `
+
+<div class="card note-card h-100 p-3">
+
+    <div>
+
+        <h5>
+            📄 ${note.title}
+        </h5>
+
+        <span class="badge bg-primary">
+            ${note.subject}
+        </span>
+
+        <div class="text-muted mt-2">
+            ${note.upload_date || ""}
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="d-flex flex-wrap gap-2">
+
+        <a
+    href="/view-note/${note.filename}"
+    target="_blank"
+    class="btn btn-primary btn-sm"
+    onclick="addHistory(${note.id},'View')"
+>
+    View
+</a>
+ 
+ <button
+    class="btn btn-success btn-sm"
+    onclick="
+        addHistory(${note.id}, 'Summary');
+        summarizeNote('${note.filename}', ${note.id}, this);
+    "
+>
+    Summary
+</button>
+
+
+    <button
+    class="btn btn-warning btn-sm"
+    onclick="
+        addHistory(${note.id},'Quiz');
+        generateQuiz('${note.filename}', ${note.id}, this)
+    "
+>
+    Quiz
+</button>
+
+      <button
+    class="btn btn-info btn-sm"
+    onclick="
+        addHistory(${note.id},'Flashcards');
+        generateFlashcards('${note.filename}', ${note.id}, this)
+    "
+>
+    Flashcards
+</button>
+
+  
+
+<button
+    class="btn btn-secondary btn-sm"
+    onclick="bookmarkNote(${note.id})"
+>
+    ⭐ Bookmark
+</button>
+
+
+
+        <button
+            class="btn btn-danger btn-sm"
+            onclick="deleteNote(${note.id})"
+        >
+            Delete
+        </button>
+
+    </div>
+
+</div>
+`;
+
+        notesList.appendChild(card);
+
+    });
+
+}
+
+document
+.getElementById("pdfInput")
+.addEventListener("change", function(){
+
+    let file =
+        this.files[0];
+
+    document.getElementById(
+        "selectedFile"
+    ).innerText =
+        file ?
+        file.name :
+        "No file selected";
+
+});
+
+function loadProfile(){
+
+    fetch("/profile")
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        document.getElementById(
+            "profileData"
+        ).innerHTML = `
+
+            <h4>${data.name}</h4>
+
+            <p>
+                📧 ${data.email}
+            </p>
+
+            <p>
+                📚 Notes Uploaded:
+                ${data.notes_count}
+            </p>
+
+        `;
+
+    });
+
+}
+
+function saveSummary(){
+
+    fetch("/save-summary", {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body: JSON.stringify({
+            content: currentSummary,
+            note_id: currentNoteId
+        })
+
+    })
+
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+    });
+
+}
+
+function loadSummaries(){
+
+    fetch("/summaries")
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        let container =
+            document.getElementById("summariesList");
+
+        container.innerHTML = "";
+
+        data.summaries.forEach(summary => {
+
+            container.innerHTML += `
+
+<div class="card p-3 mb-3">
+
+    <h5>
+        📄 ${summary.title}
+    </h5>
+
+    <pre>
+${summary.content}
+    </pre>
+
+    <a
+        href="/download-summary/${summary.id}"
+        class="btn btn-primary mt-2"
+    >
+        Download PDF
+    </a>
+
+</div>
+
+`;
+
+        });
+
+    });
+
+}
+
+function saveQuiz(){
+
+    fetch("/save-quiz", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            content: currentQuiz,
+            note_id: currentNoteId
+        })
+
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        alert(data.message);
+
+    });
+
+}
+
+function loadQuizzes(){
+
+    fetch("/quizzes")
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        let container =
+            document.getElementById(
+                "quizzesList"
+            );
+
+        container.innerHTML = "";
+
+        data.quizzes.forEach(quiz => {
+
+            container.innerHTML += `
+
+                <div class="card p-3 mb-3">
+
+                    <h5>
+                        📄 ${quiz.title}
+                    </h5>
+
+                    <pre>
+${quiz.content}
+                    </pre>
+
+                </div>
+
+            `;
+
+        });
+
+    });
+
+}
+
+function saveFlashcards(){
+
+    fetch(
+        "/save-flashcards",
+        {
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":
+                "application/json"
+            },
+
+            body:JSON.stringify({
+
+                content:
+                    currentFlashcards,
+
+                note_id:
+                    currentNoteId
+
+            })
+
+        }
+    )
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        alert(
+            data.message
+        );
+
+    });
+
+}
+
+function loadFlashcards(){
+
+    fetch("/flashcards")
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        let container =
+            document.getElementById(
+                "flashcardsList"
+            );
+
+        container.innerHTML = "";
+
+        data.flashcards.forEach(card => {
+
+            container.innerHTML += `
+
+<div class="card p-3 mb-3">
+
+    <h5>
+        📄 ${card.title}
+    </h5>
+
+    <pre>
+${card.content}
+    </pre>
+
+</div>
+
+`;
+
+        });
+
+    });
+
+}
+
+
+function loadChatNotes(){
+
+    fetch("/my-notes")
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        let select =
+            document.getElementById(
+                "chatNoteSelect"
+            );
+
+        select.innerHTML = "";
+
+        data.notes.forEach(note => {
+
+            select.innerHTML += `
+
+                <option
+                    value="${note.filename}">
+                    ${note.title}
+                </option>
+
+            `;
+
+        });
+
+    });
+
+}
+
+function loadChatNotes(){
+
+    fetch("/my-notes")
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        let select =
+            document.getElementById(
+                "chatNoteSelect"
+            );
+
+        select.innerHTML = "";
+
+        data.notes.forEach(note => {
+
+            select.innerHTML += `
+                <option value="${note.filename}">
+                    ${note.title}
+                </option>
+            `;
+        });
+
+    });
+
+}
+
+function askQuestion() {
+
+    let filename = document.getElementById("chatNoteSelect").value;
+
+    let question = document.getElementById("chatQuestion").value;
+
+    if(question.trim() === ""){
+        return;
+    }
+
+    let chatBox = document.getElementById("chatConversation");
+
+    // Show user's message immediately
+    chatBox.innerHTML += `
+        <div class="text-end mb-3">
+            <div class="bg-primary text-white d-inline-block p-2 rounded">
+                ${question}
+            </div>
+        </div>
+
+        <div id="loadingMessage" class="text-start mb-4">
+            🤖 Thinking...
+        </div>
+    `;
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    fetch("/chat-notes", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            filename: filename,
+            question: question
+        })
+
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        document.getElementById("loadingMessage").remove();
+
+        chatBox.innerHTML += `
+            <div class="text-start mb-4">
+                <div class="bg-light border d-inline-block p-2 rounded">
+                    ${data.answer}
+                </div>
+            </div>
+        `;
+
+        document.getElementById("chatQuestion").value = "";
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+    });
+
+}
+
+function bookmarkNote(noteId){
+
+    fetch("/bookmark-note",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            note_id:noteId
+        })
+    })
+
+    .then(res=>res.json())
+
+    .then(data=>{
+        alert(data.message);
+    });
+
+}
+
+function loadBookmarks(){
+
+    fetch("/bookmarks")
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        let container =
+            document.getElementById(
+                "bookmarksList"
+            );
+
+        container.innerHTML = "";
+
+        data.forEach(note=>{
+
+            container.innerHTML += `
+
+            <div class="card p-3 mb-3">
+
+                <h5>
+                    📄 ${note.title}
+                </h5>
+
+                <p>
+                    Subject:
+                    ${note.subject}
+                </p>
+
+            </div>
+
+            `;
+
+        });
+
+    });
+
+}
+
+function addHistory(noteId, action){
+
+    fetch("/add-history",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            note_id:noteId,
+            action:action
+
+        })
+
+    });
+
+}
+
+function showToast(title, message){
+
+    document.getElementById("toastTitle").innerText = title;
+
+    document.getElementById("toastBody").innerText = message;
+
+    const toastElement = document.getElementById("liveToast");
+
+    const toast = new bootstrap.Toast(
+        toastElement,
+        {
+            delay:3000
+        }
+    );
+
+    toast.show();
+
+}
+
+function loadHistory(){
+
+    fetch("/history")
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        let container =
+        document.getElementById(
+            "historyList"
+        );
+
+        container.innerHTML="";
+
+        data.forEach(item=>{
+
+            container.innerHTML += `
+
+            <div class="card p-3 mb-2">
+
+                <h5>
+                    ${item.title}
+                </h5>
+
+                <p>
+                    ${item.action}
+                </p>
+
+            </div>
+
+            `;
+
+        });
+
+    });
+
+}
+
+window.onload = function(){
+
+    loadUser();
+
+    showSection("dashboard");
+
+}
+
+</script>
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+
+    <div id="liveToast"
+         class="toast"
+         role="alert"
+         aria-live="assertive"
+         aria-atomic="true">
+
+        <div class="toast-header">
+
+            <strong class="me-auto" id="toastTitle">
+                PeerNotes
+            </strong>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="toast">
+            </button>
+
+        </div>
+
+        <div class="toast-body" id="toastBody">
+            Notification
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
