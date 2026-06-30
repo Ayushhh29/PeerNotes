@@ -34,6 +34,12 @@ db.init_app(app)
 UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+with app.app_context():
+    db.create_all()
+
+    print("Database created successfully")
+print(app.config["SQLALCHEMY_DATABASE_URI"])
+
 @app.route("/")
 def home():
     return render_template("login.html")
