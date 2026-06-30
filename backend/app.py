@@ -31,7 +31,10 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
-UPLOAD_FOLDER = "uploads"
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
+
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -523,11 +526,13 @@ def me():
     user_id = session.get("user_id")
 
     if not user_id:
-        return jsonify({
-            "error": "Not logged in"
-        }), 401
+        return jsonify({"error": "Not logged in"}), 401
 
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)   # preferred in SQLAlchemy 2.x
+
+    if user is None:
+        session.clear()
+        return jsonify({"error": "User not found"}), 401
 
     return jsonify({
         "id": user.id,
